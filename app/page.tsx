@@ -30,6 +30,9 @@ export default function Home() {
   const [city, setCity] = useState('');
   const [favorites, setFavorites] = useState<FavoriteQuote[]>([]);
   const [showFavorites, setShowFavorites] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [currentCity, setCurrentCity] = useState('');
 
   useEffect(() => {
     // お気に入りの読み込み
@@ -65,28 +68,52 @@ export default function Home() {
     }
   }, []);
 
+  const fetchWeather = async (cityName: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // APIキーの存在確認
+      if (!process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY) {
+        throw new Error('APIキーが設定されていません。');
+      }
+
+      console.log('Fetching weather for:', cityName);
+      const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY}&units=metric`
+      );
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Weather API Error:', errorData);
+        throw new Error('都市が見つかりませんでした。正しい都市名を入力してください。');
+      }
+
+      const data = await response.json();
+      console.log('Weather data:', data);
+      setWeather(data);
+      setCurrentCity(cityName);
+      const weatherQuote = getQuoteByWeather(data.weather[0].main);
+      setQuote(weatherQuote);
+      
+      // お気に入り状態の確認
+      const isQuoteFavorite = favorites.some(
+        fav => fav.text === weatherQuote.text && fav.author === weatherQuote.author
+      );
+      setIsFavorite(isQuoteFavorite);
+    } catch (err) {
+      console.error('Error fetching weather:', err);
+      setError(err instanceof Error ? err.message : '天気情報の取得に失敗しました。');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (city) {
-      const fetchWeather = async () => {
-        try {
-          const data = await getWeather(city);
-          setWeather(data);
-          const weatherQuote = getQuoteByWeather(data.weather[0].main);
-          setQuote(weatherQuote);
-          
-          // お気に入り状態の確認
-          const isQuoteFavorite = favorites.some(
-            fav => fav.text === weatherQuote.text && fav.author === weatherQuote.author
-          );
-          setIsFavorite(isQuoteFavorite);
-        } catch (error) {
-          console.error('Error:', error);
-        }
-      };
-
-      fetchWeather();
+      fetchWeather(city);
     }
-  }, [city, favorites]);
+  }, [city]);
 
   const toggleFavorite = () => {
     if (!quote || !weather) return;
@@ -158,55 +185,42 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen relative">
+    <main className="relative overflow-hidden min-h-screen">
       <div className="weather-background">
         {renderCats()}
       </div>
-
-      <div className="relative z-10 min-h-screen flex items-center justify-center p-8">
-        <div className="glass-card max-w-2xl w-full rounded-2xl p-8">
-          <div className="flex justify-between items-center mb-8">
+      <div className="container mx-auto px-4 py-8 relative z-10">
+        <div className="glass-card p-8 rounded-2xl">
+          <h1 className="text-4xl font-bold mb-8 text-center bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+            Weather Quotes
+          </h1>
+          
+          <div className="mb-8">
             <input
               type="text"
               value={city}
               onChange={(e) => setCity(e.target.value)}
-              className="city-input"
-              placeholder="都市名を入力"
+              onKeyPress={(e) => e.key === 'Enter' && fetchWeather(city)}
+              placeholder="都市名を入力（例: Tokyo）"
+              className="city-input w-full p-4 rounded-xl bg-white/10 backdrop-blur-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <button
-              onClick={() => setShowFavorites(!showFavorites)}
-              className="text-white/80 hover:text-white transition-colors"
-            >
-              {showFavorites ? '天気に戻る' : 'お気に入りを見る'}
-            </button>
+            {error && (
+              <p className="text-red-500 mt-2 text-center">{error}</p>
+            )}
           </div>
 
-          {showFavorites ? (
-            <div className="space-y-4">
-              <h2 className="text-2xl font-light text-white/90 mb-4">お気に入りの名言</h2>
-              {favorites.length === 0 ? (
-                <p className="text-white/70">お気に入りの名言はまだありません</p>
-              ) : (
-                favorites.map((fav, index) => (
-                  <div key={index} className="glass-card p-6 rounded-xl">
-                    <p className="quote-text mb-2">"{fav.text}"</p>
-                    <p className="author-text mb-2">- {fav.author}</p>
-                    <p className="text-sm text-white/60">
-                      {fav.city} - {fav.weather} ({new Date(fav.timestamp).toLocaleDateString()})
-                    </p>
-                  </div>
-                ))
-              )}
+          {loading ? (
+            <div className="text-center py-8">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto"></div>
+              <p className="mt-4 text-white/80">天気情報を取得中...</p>
             </div>
-          ) : (
+          ) : weather && (
             <>
-              {weather && (
-                <div className="text-center mb-12">
-                  <h1 className="text-3xl font-light mb-4 text-white/90">{weather.name}</h1>
-                  <p className="text-xl mb-4 text-white/80">{weather.weather[0].description}</p>
-                  <p className="temperature">{Math.round(weather.main.temp)}°C</p>
-                </div>
-              )}
+              <div className="text-center mb-12">
+                <h1 className="text-3xl font-light mb-4 text-white/90">{weather.name}</h1>
+                <p className="text-xl mb-4 text-white/80">{weather.weather[0].description}</p>
+                <p className="temperature">{Math.round(weather.main.temp)}°C</p>
+              </div>
 
               {quote && (
                 <div className="glass-card p-8 rounded-xl mb-8 relative">
