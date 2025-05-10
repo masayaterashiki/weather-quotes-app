@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { PrismaClient } from '@prisma/client';
 import { authOptions } from '../../../lib/auth';
@@ -6,8 +6,8 @@ import { authOptions } from '../../../lib/auth';
 const prisma = new PrismaClient();
 
 export async function DELETE(
-  request: Request,
-  context: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -20,7 +20,7 @@ export async function DELETE(
     }
 
     const favorite = await prisma.favorite.findUnique({
-      where: { id: context.params.id }
+      where: { id: params.id }
     });
 
     if (!favorite) {
@@ -38,7 +38,7 @@ export async function DELETE(
     }
 
     await prisma.favorite.delete({
-      where: { id: context.params.id }
+      where: { id: params.id }
     });
 
     return NextResponse.json(
