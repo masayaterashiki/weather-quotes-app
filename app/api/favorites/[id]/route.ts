@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 export async function DELETE(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -20,7 +20,7 @@ export async function DELETE(
     }
 
     const favorite = await prisma.favorite.findUnique({
-      where: { id: context.params.id }
+      where: { id: params.id }
     });
 
     if (!favorite) {
@@ -38,7 +38,7 @@ export async function DELETE(
     }
 
     await prisma.favorite.delete({
-      where: { id: context.params.id }
+      where: { id: params.id }
     });
 
     return NextResponse.json(
