@@ -1,0 +1,396 @@
+.weather-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+}
+
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.weather-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #fff, #e0e0e0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.temperature {
+  font-size: 3.5rem;
+  font-weight: 300;
+  background: linear-gradient(135deg, #fff, #e0e0e0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 1rem 0;
+}
+
+.quote-text {
+  font-size: 1.5rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 300;
+  letter-spacing: 0.5px;
+}
+
+.author-text {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+  font-weight: 400;
+}
+
+.city-input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  width: 100%;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.city-input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.city-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.share-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.share-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.favorite-button {
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.3s ease;
+}
+
+.favorite-button:hover {
+  color: #ff6b6b;
+  transform: scale(1.1);
+}
+
+.favorite-button.active {
+  color: #ff6b6b;
+}
+
+/* 雨のアニメーション */
+.rain {
+  background: linear-gradient(135deg, #1a2a3a, #2c3e50);
+  position: relative;
+}
+
+.rain::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.1) 100%);
+  animation: rainEffect 0.8s linear infinite;
+}
+
+.raindrop {
+  position: absolute;
+  width: 2px;
+  height: 100px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5));
+  animation: raindrop 1s linear infinite;
+}
+
+@keyframes rainEffect {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes raindrop {
+  0% {
+    transform: translateY(-100%) translateX(0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(100vh) translateX(20px);
+    opacity: 0;
+  }
+}
+
+/* 晴れのアニメーション */
+.sunny {
+  background: linear-gradient(135deg, #1e90ff, #87ceeb);
+  position: relative;
+  overflow: hidden;
+}
+
+.sunny::before {
+  content: '';
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, #ffd700 0%, rgba(255, 215, 0, 0.8) 50%, transparent 70%);
+  border-radius: 50%;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: sunPulse 4s ease-in-out infinite;
+}
+
+.sunny::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.2) 0%, transparent 50%);
+  animation: sunGlow 8s ease-in-out infinite;
+}
+
+@keyframes sunPulse {
+  0%, 100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateX(-50%) scale(1.1);
+    opacity: 1;
+  }
+}
+
+@keyframes sunGlow {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* 曇りのアニメーション */
+.cloudy {
+  background: linear-gradient(135deg, #2c3e50, #bdc3c7);
+  position: relative;
+  overflow: hidden;
+}
+
+.cloud {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50px;
+  filter: blur(5px);
+  animation: cloudFloat 20s linear infinite;
+}
+
+.cloud::before,
+.cloud::after {
+  content: '';
+  position: absolute;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  filter: blur(5px);
+}
+
+.cloud::before {
+  width: 50%;
+  height: 100%;
+  top: -50%;
+  left: 25%;
+}
+
+.cloud::after {
+  width: 30%;
+  height: 60%;
+  top: -30%;
+  right: 20%;
+}
+
+@keyframes cloudFloat {
+  0% {
+    transform: translateX(-100%) translateY(0);
+  }
+  50% {
+    transform: translateX(0) translateY(-20px);
+  }
+  100% {
+    transform: translateX(100vw) translateY(0);
+  }
+}
+
+/* 雪のアニメーション */
+.snowy {
+  background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+  position: relative;
+  overflow: hidden;
+}
+
+.snowflake {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  filter: blur(1px);
+  animation: snowFall linear infinite;
+}
+
+@keyframes snowFall {
+  0% {
+    transform: translateY(-100%) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* 猫のアニメーション */
+.cat {
+  position: absolute;
+  width: 150px;
+  height: 100px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.4));
+  opacity: 0.9;
+  animation: catWalk 25s linear infinite;
+  transform-origin: center;
+}
+
+.cat::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  animation: catTail 1.5s ease-in-out infinite;
+}
+
+.cat-black {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Cpath d='M150,40 C180,40 210,70 210,100 C210,130 180,160 150,160 C120,160 90,130 90,100 C90,70 120,40 150,40 Z' fill='%23000'/%3E%3Cpath d='M120,60 C135,60 135,90 120,90 C105,90 105,60 120,60 Z' fill='%23fff'/%3E%3Cpath d='M180,60 C195,60 195,90 180,90 C165,90 165,60 180,60 Z' fill='%23fff'/%3E%3Cpath d='M150,90 C150,105 135,120 150,120 C165,120 150,105 150,90 Z' fill='%23fff'/%3E%3Cpath d='M105,45 C90,30 75,45 90,60 C105,75 120,60 105,45 Z' fill='%23000'/%3E%3Cpath d='M195,45 C210,30 225,45 210,60 C195,75 180,60 195,45 Z' fill='%23000'/%3E%3Cpath d='M135,160 C120,175 105,160 120,145 C135,130 150,145 135,160 Z' fill='%23000'/%3E%3Cpath d='M165,160 C180,175 195,160 180,145 C165,130 150,145 165,160 Z' fill='%23000'/%3E%3Cpath d='M150,160 C150,175 135,190 150,190 C165,190 150,175 150,160 Z' fill='%23000'/%3E%3Cpath d='M120,60 C120,45 105,30 120,30 C135,30 120,45 120,60 Z' fill='%23000'/%3E%3Cpath d='M180,60 C180,45 195,30 180,30 C165,30 180,45 180,60 Z' fill='%23000'/%3E%3C/svg%3E");
+}
+
+.cat-white {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Cpath d='M150,40 C180,40 210,70 210,100 C210,130 180,160 150,160 C120,160 90,130 90,100 C90,70 120,40 150,40 Z' fill='%23fff'/%3E%3Cpath d='M120,60 C135,60 135,90 120,90 C105,90 105,60 120,60 Z' fill='%23000'/%3E%3Cpath d='M180,60 C195,60 195,90 180,90 C165,90 165,60 180,60 Z' fill='%23000'/%3E%3Cpath d='M150,90 C150,105 135,120 150,120 C165,120 150,105 150,90 Z' fill='%23000'/%3E%3Cpath d='M105,45 C90,30 75,45 90,60 C105,75 120,60 105,45 Z' fill='%23fff'/%3E%3Cpath d='M195,45 C210,30 225,45 210,60 C195,75 180,60 195,45 Z' fill='%23fff'/%3E%3Cpath d='M135,160 C120,175 105,160 120,145 C135,130 150,145 135,160 Z' fill='%23fff'/%3E%3Cpath d='M165,160 C180,175 195,160 180,145 C165,130 150,145 165,160 Z' fill='%23fff'/%3E%3Cpath d='M150,160 C150,175 135,190 150,190 C165,190 150,175 150,160 Z' fill='%23fff'/%3E%3Cpath d='M120,60 C120,45 105,30 120,30 C135,30 120,45 120,60 Z' fill='%23fff'/%3E%3Cpath d='M180,60 C180,45 195,30 180,30 C165,30 180,45 180,60 Z' fill='%23fff'/%3E%3C/svg%3E");
+}
+
+@keyframes catWalk {
+  0% {
+    transform: translateX(-100%) translateY(0) rotate(0deg) scale(1);
+  }
+  25% {
+    transform: translateX(25%) translateY(-30px) rotate(5deg) scale(1.1);
+  }
+  50% {
+    transform: translateX(50%) translateY(0) rotate(0deg) scale(1);
+  }
+  75% {
+    transform: translateX(75%) translateY(-30px) rotate(-5deg) scale(1.1);
+  }
+  100% {
+    transform: translateX(200%) translateY(0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes catTail {
+  0%, 100% {
+    transform: rotate(-10deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+}
+
+/* 星のアニメーション */
+.star {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle 4s ease-in-out infinite;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.star::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: white;
+  border-radius: 50%;
+  animation: starGlow 2s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes starGlow {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+} 
