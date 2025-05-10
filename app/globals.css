@@ -16,4 +16,55 @@ body {
     rgb(var(--background-end-rgb))
   );
   min-height: 100vh;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.city-input {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.quote-text {
+  font-size: 1.5rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.author-text {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.temperature {
+  font-size: 3rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.favorite-button {
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.2s;
+}
+
+.favorite-button:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.favorite-button.active {
+  color: #ef4444;
+}
+
+.share-button {
+  transition: transform 0.2s;
+}
+
+.share-button:hover {
+  transform: scale(1.1);
 } 
